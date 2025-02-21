@@ -22,7 +22,7 @@ function Gameboard() {
     // };
 
     const choosen = (row, column, player) => {
-        if (board[row][column].getValue() == ".") {
+        if (board[row][column].getValue() == "") {
             board[row][column].addToken(player);
         }
     }
@@ -36,7 +36,7 @@ function Gameboard() {
 }
 
 function Cell() {
-    let value = ".";
+    let value = "";
   
     const addToken = (player) => {
       value = player;
@@ -55,6 +55,8 @@ function GameController(
     playerTwoName = "Player Two"
   ) {
     const board = Gameboard();
+    const playerTurnDiv = document.querySelector('.turn');
+    const boardDiv = document.querySelector('.board');
   
     const players = [
       {
@@ -76,7 +78,6 @@ function GameController(
   
     const printNewRound = () => {
       board.printBoard();
-      console.log(`${getActivePlayer().name}'s turn.`);
     };
   
     const playRound = (row, column) => {
@@ -94,12 +95,13 @@ function GameController(
               (cells[0][0].getValue() == symbol && cells[1][1].getValue() == symbol && cells[2][2].getValue() == symbol) ||
               (cells[2][0].getValue() == symbol && cells[1][1].getValue() == symbol && cells[0][2].getValue() == symbol)
             ) {
-              alert(`${player.name} Wins`);
-              board.getBoard().forEach(row => {
-                row.forEach(cell => {
-                  cell.addToken("."); // Reset the cell value to 0
-                });
-              });
+                playerTurnDiv.textContent = `${activePlayer.name} Wins`;
+                boardDiv.removeEventListener("click", clickHandlerBoard);
+            //     board.getBoard().forEach(row => {
+            //     row.forEach(cell => {
+            //       cell.addToken(""); // Reset the cell value to 0
+            //     });
+            //   });
             }
           };
         board.choosen(row, column, getActivePlayer().token);
@@ -107,12 +109,13 @@ function GameController(
         /*  This is where we would check for a winner and handle that logic,
             such as a win message. */
 
-        if (board.getBoard().every(row => row.every(cell => cell.getValue() !== "."))) {alert("It's a tie");
-            board.getBoard().forEach(row => {
-                row.forEach(cell => {
-                  cell.addToken("."); // Reset the cell value to 0
-                });
-              });
+        if (board.getBoard().every(row => row.every(cell => cell.getValue() !== ""))) {
+            playerTurnDiv.textContent = `It's a DRAW`;
+            // board.getBoard().forEach(row => {
+            //     row.forEach(cell => {
+            //       cell.addToken(""); // Reset the cell value to 0
+            //     });
+            //   });
             }
         checkWinner(players[0]);
         checkWinner(players[1]);
@@ -133,8 +136,10 @@ function GameController(
 
 function ScreenController() {
     const game = GameController();
-    const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+    const playerx = document.querySelector('.x');
+    const playero = document.querySelector('.o');
+    const rematch = document.querySelector('.again');
   
     const updateScreen = () => {
       // clear the board
@@ -145,7 +150,15 @@ function ScreenController() {
       const activePlayer = game.getActivePlayer();
   
       // Display player's turn
-      playerTurnDiv.textContent = `${activePlayer.name}'s turn..., play your ${activePlayer.token}`;
+    //   playerTurnDiv.textContent = `${activePlayer.name}'s turn..., play your ${activePlayer.token}`;
+      if (activePlayer.token == "O") {
+        playerx.classList.add("active");
+        playero.classList.remove("active");
+      }
+      if (activePlayer.token == "X") {
+        playero.classList.add("active");
+        playerx.classList.remove("active");
+      }
   
       // Render board squares
       board.forEach((row, rowIndex) => {
@@ -169,11 +182,27 @@ function ScreenController() {
       const selectedRow = e.target.dataset.row;
       // Make sure I've clicked a column and not the gaps in between
       if (!selectedColumn) return;
-      if (game.getBoard()[selectedRow][selectedColumn].getValue() === ".") { 
+      if (game.getBoard()[selectedRow][selectedColumn].getValue() === "") { 
         game.playRound(selectedRow, selectedColumn);
-      updateScreen();};
+        updateScreen();};
     }
     boardDiv.addEventListener("click", clickHandlerBoard);
+    rematch.addEventListener("click", () => {
+        // Reset the game board
+        const board = game.getBoard();
+        board.forEach((row) => {
+          row.forEach((cell) => {
+            cell.addToken(""); // Clear all cells
+          });
+        });
+    
+        // Re-enable board click listener
+        boardDiv.addEventListener("click", clickHandlerBoard);
+    
+        // Reset UI elements
+        document.querySelector(".turn").textContent = "New Game Started!";
+        updateScreen();
+      });
   
     // Initial render
     updateScreen();

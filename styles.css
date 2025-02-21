@@ -1,20 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Pixelify+Sans:wght@400..700&family=Silkscreen&display=swap');
+
 body {
-    border: 1px solid black;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    margin: 0;
+    background-color: rgb(233, 213, 248);
+    font-family: "Silkscreen", serif;
 }
+section {
+    height: 100vh;
+    background-color: white;display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+
+}
+
+.choice {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.player {
+    font-size: 50px;
+    width: 80px;
+    background-color: rgb(218, 218, 218);
+    border-radius: 10px;
+}
+
+.active{
+    background-color: #398ae6;
+    box-shadow:0 0 20px blue;
+}
+
 .board {
     display: grid;
-    height: 500px;
-    width: 500px;
+    height: 300px;
+    width: 300px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    border: 1px solid black;
-    gap: 2px;
-    padding: 2px;
-    background-color: rgb(0, 0, 0);
+    gap: 12px;
+    padding: 20px;
   }
   
 .cell {
@@ -23,7 +53,22 @@ body {
     align-items: center;
     text-align: center;
     font-size: 3rem;
-    border: 1px solid grey;
-    background: rgb(255, 255, 255);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    background: rgb(218, 170, 254);
     cursor: pointer;
 }  
+
+.result {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.again {
+    border: none;
+    background-color: #398ae6;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 20px;
+}
